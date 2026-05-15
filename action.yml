@@ -1,6 +1,10 @@
 name: Deploy to proc-ok
 description: Trigger deployment to proc-ok
 
+branding:
+  icon: upload-cloud
+  color: blue
+
 inputs:
   webhook-url:
     description: Webhook URL
