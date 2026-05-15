@@ -1,0 +1,28 @@
+name: Deploy to proc-ok
+description: Trigger deployment to proc-ok
+
+inputs:
+  webhook-url:
+    description: Webhook URL
+    required: true
+  token:
+    description: Webhook token
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Trigger Deploy
+      shell: bash
+      run: |
+        curl --request POST '${{ inputs.webhook-url }}' \
+          --header 'Authorization: Bearer ${{ inputs.token }}' \
+          --header 'Content-Type: application/json' \
+          --data '{
+            "commitHash": "${{ github.sha }}",
+            "commitMessage": "${{ github.event.head_commit.message }}",
+            "commitAuthor": "${{ github.event.head_commit.author.name }}",
+            "repoBranch": "${{ github.ref_name }}",
+            "triggeredByUsername": "${{ github.actor }}",
+            "ciRunUrl": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          }'
